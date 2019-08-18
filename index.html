@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sort on React</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://npmcdn.com/react@15.3.0/dist/react.js"></script>
+    <script src="https://npmcdn.com/react-dom@15.3.0/dist/react-dom.js"></script>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <script src="https://npmcdn.com/remarkable@1.6.2/dist/remarkable.min.js"></script>
+    
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        class App extends React.Component {
+            constructor(props){
+                super(props);
+                this.getValue = this.getValue.bind(this);
+                this.state = {
+                        users: [
+                    {name: 'Коля', surname: 'Иванов', salary: 200},
+                    {name: 'Вася', surname: 'Петров', salary: 220},
+                    {name: 'Петя', surname: 'Сидоров', salary: 450},
+                    {name: 'Катя', surname: 'Босс', salary: 1800 }
+                  ],
+                    selectedValue: 'surname'
+                    
+                }
+            }
+            
+            getValue(e){
+               this.setState({selectedValue: e.target.value});
+            }
+            
+            render(){
+                let arr = this.state.users;
+                let value = this.state.selectedValue;
+                arr.sort(function(a,b){
+                    if (typeof(a[value]) && typeof(b[value]) == "number"){
+                        return b[value] - a[value];
+                        } 
+                    else {
+                        return a[value] > b[value] ? 1:-1;
+                    }
+                });
+                
+                const list = arr.map((elem, index)=>{
+                    return (
+                        <User
+                            key ={index}
+                            name = {elem.name}
+                            surname = {elem.surname}
+                            salary = {elem.salary}
+                        />
+                    )
+                })
+                return (
+                    <div>
+                        <table>
+                            <tbody>
+                              <tr>
+                               <th>Имя</th>
+                               <th>Фамилия</th>
+                               <th>Зарплата</th>
+                              </tr>
+                               {list}
+                            </tbody>
+                        </table>
+                        <p>Сортировать по :  
+                           <select  onChange={this.getValue} value={this.state.selectedValue}>
+                                <option value="name">Имя</option>                            
+                                <option value="surname">Фамилия</option>                            
+                                <option value="salary">Зарплата</option>                            
+                            </select>
+                        </p>
+                    </div>
+                )
+            }
+        }
+        
+
+class User extends React.Component {
+    render(){
+        return (
+            <tr>
+                <td>{this.props.name}</td>
+                <td>{this.props.surname}</td>
+                <td>{this.props.salary}</td>
+            </tr>
+        )
+        
+    }
+}
+        ReactDOM.render(<App/>, document.getElementById('root'));
+    </script>
+</body>
+</html>
